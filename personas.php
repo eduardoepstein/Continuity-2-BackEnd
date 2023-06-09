@@ -4,7 +4,7 @@ $id = nnreqcleanint("id_persona");
 $documento = reqtrim("documento");
 $nacionalidad = nnreqcleanint("nacionalidad");
 $apellido = nnreqcleanint("apellido");
-if ($documento && !is_null($nacionalidad) || $id || $apellido) {
+if (($documento && !is_null($nacionalidad)) || $id || $apellido) {
 
   $where = $id ? " where usr.id = ?" : ( 
     $documento ? " where usr.dni = ? and usr.idnacionalidad = ?": " where concat(apellido,apellidootro) like ?");

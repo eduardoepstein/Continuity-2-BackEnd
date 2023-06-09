@@ -1,0 +1,117 @@
+<?php
+$respuesta = array();
+$id = nnreqcleanint("id");
+$id_paciente = nnreqcleanint("id_paciente");
+$fecha = nreqtrim("fecha");
+$q = nnreqcleanint("q");
+$noq = nnreqcleanint("noq");
+$nc = nnreqcleanint("nc");
+$anterior = nnreqcleanint("anterior");
+$anteroseptal = nnreqcleanint("anteroseptal");
+$inferior = nnreqcleanint("inferior");
+$apical = nnreqcleanint("apical");
+$anteriorextenso = nnreqcleanint("anteriorextenso");
+$complicaciones = nnreqcleanint("complicaciones");
+$lateral = nnreqcleanint("lateral");
+$usr_proceso = reqtrim("usr_proceso") ?? '';
+
+if ($id || ($id_paciente && $usr_proceso)) {
+$where = $id ? " where ec.id = ? ": 
+  (($id_paciente && $fecha) ? " where ec.idpaciente = ? and ec.fecha = ? " :
+    " where ec.idpaciente = ? and ec.fecha = CURDATE() ");
+  $sql = "
+  select  
+    ec.id,
+    ec.idpaciente,
+    ec.fecha,
+    ec.usrproceso
+  from ec_iam  ec    
+  {$where}
+  order by id desc
+  ";  
+  
+  $params = $id ? array("i",&$id) : 
+    (($id_paciente && $fecha) ? array("is",&$id_paciente,&$fecha) : 
+      array("i",&$id_paciente));      
+  $mydatos = my_query($sql, $params);  
+  if ($mydatos !== false) {
+    $codigo = 0;
+    $descripcion = "OK";    
+    $mydatos2 = NULL;  
+    if ($mydatos["datos"]) {   
+      $id = $id ?? $mydatos["datos"][0]["id"];         
+      print("que");
+      $sql = "
+      update
+      ec_iam
+      set
+        idpaciente = ?,
+        fecha = CURDATE(),
+        q = ?,
+        noq = ?,
+        nc = ?,
+        anterior = ?,
+        anteroseptal = ?,
+        inferior = ?,
+        apical = ?,
+        anteriorextenso = ?,
+        complicaciones = ?,
+        `lateral` = ?,
+        fecproceso = SYSDATE(),      
+        usrproceso = ?        
+      where
+        id = ?
+      ";
+      $params = array("iiiiiiiiiiisi"
+      ,&$id_paciente,&$q,&$noq,&$nc,&$anterior,&$anteroseptal,&$inferior,&$apical,
+      &$anteriorextenso,&$complicaciones,&$lateral,&$usr_proceso,&$id);  
+    } else {
+      $values = $fecha ? "values(?,?,?,?,?,?,?,?,?,?,?,SYSDATE(),?,?)" : "values(?,?,?,?,?,?,?,?,?,?,?,SYSDATE(),?,CURDATE())";
+      $sql = "
+      insert into
+      ec_iam(
+          idpaciente,          
+          q,
+          noq,
+          nc,
+          anterior,
+          anteroseptal,
+          inferior,
+          apical,
+          anteriorextenso,
+          complicaciones,
+          `lateral`,
+          fecproceso,
+          usrproceso,
+          fecha
+        )
+      {$values}
+      ";
+      $params = array("iiiiiiiiiiis"
+      ,&$id_paciente,&$q,&$noq,&$nc,&$anterior,&$anteroseptal,&$inferior,&$apical,
+      &$anteriorextenso,&$complicaciones,&$lateral,&$usr_proceso);       
+      if($fecha) {
+        $params[0] = count($params) == 0 ? "s" : $params[0] . "s";    
+        $params[count($params)] = &$fecha;       
+      }
+    }        
+    $mydatos2 = my_query($sql,$params,false);    
+    if($mydatos2 == true && ($mydatos2["insert_id"] || ($mydatos2["filas_afectadas"] == 1))) {      
+      $id = $id ?? $mydatos2["insert_id"] ?? -1;               
+      $respuesta = array(
+        "id" => $id
+      );    
+    } else{
+      $codigo = -23;
+      $descripcion = "Error al cargar los datos";
+    }
+  } else {
+    $codigo = -22;
+    $descripcion = "Error en los datos";
+  }
+} else {
+  $codigo = -21;
+  $descripcion = "Faltan argumentos requeridos";
+}
+
+enviar_respuesta_datos($codigo, $descripcion, $respuesta);

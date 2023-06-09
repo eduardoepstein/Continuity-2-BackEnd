@@ -13,8 +13,8 @@ $cantidad = nnreqcleanint("cantidad");
 $observaciones = nreqtrim("observaciones");
 $unidad = nreqtrim("unidad"); //tld_codunidad
 
-$tratramiento = nreqtrim("id_tratamiento"); //0 cronico, 1 agudo
-//falta agregar cargar dato de fecha hasta por parametro
+$tratramiento = nreqtrim("tratamiento"); //0 cronico, 1 agudo
+
 if ($id || ($id_paciente && $codigo_medicamento)) {    
   $tratramiento = !is_null($tratramiento) ? (($tratramiento == 0) ? 365 : 30) : null;    
   $where = $id ? " where id = ? " : " where idpaciente = ? and codmedicamento = ? ";    
@@ -32,7 +32,6 @@ if ($id || ($id_paciente && $codigo_medicamento)) {
 ";
 $params = $id ? array("i",&$id) : array("ii",&$id_paciente,&$codigo_medicamento);
 $mydatos = my_query($sql, $params);
-print_r($mydatos);
 if ($mydatos !== false) {  
   $codigo = 0;
   $descripcion = "OK";    
@@ -71,7 +70,8 @@ if ($mydatos !== false) {
       ";
       $params = array("iiissii",&$frecuencia,&$cantidad,&$hora_inicial,&$usr_proceso,&$observaciones,&$unidad,&$id);
     } else {
-      //error al cargar datos
+      $codigo = -22;
+      $descripcion = "Error en los datos";
     }
   } else {      
     if (!(is_null($id_paciente)) && !(is_null($codigo_medicamento))) {        
@@ -99,18 +99,20 @@ if ($mydatos !== false) {
         ";
         $params = array("iiiissi",&$id,&$frecuencia,&$cantidad,&$hora_inicial,&$usr_proceso,&$observaciones,&$unidad);        
       } else {
-        //error al cargar datos
+        $codigo = -24;
+        $descripcion = "El medicamento ya fue ingresado";  
       }
     } else {
-      //error
+      $codigo = -22;
+      $descripcion = "Error en los datos";
     }
   }  
-  $mydatos3 = my_query($sql,$params,false);      
+  $mydatos3 = my_query($sql,$params,false);     
   if($mydatos3 == true && ($mydatos3["insert_id"] || ($mydatos3["filas_afectadas"] == 1))) {      
       $respuesta = array(
         "id" => $id
       );    
-  } else{
+  } else {
     $codigo = -23;
     $descripcion = "Error al realizar la operación";  
   }

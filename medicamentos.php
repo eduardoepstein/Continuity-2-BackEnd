@@ -80,5 +80,5 @@ if($codigo_medicamento ||$descripcion || $codigo_droga || $descripcion_droga){
 
 
 enviar_respuesta_datos($codigo, $descripcion, $respuesta);
-print("hola");
+
 //ñ

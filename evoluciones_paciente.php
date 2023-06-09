@@ -20,7 +20,8 @@ if (!is_null($id_paciente)) {
       cst.cerrado,
       cie.id idcie10,
       cie.codigo,
-      cie.descripcion
+      cie.descripcion,
+      usr.nombre
   from pac_evoluciones  evl
     left join usuarios usr on  usr.codigo = evl.usrProceso
     left outer join pac_consultas cst on cst.idpaciente = ? and cst.Fecha = evl.fecha
@@ -66,6 +67,7 @@ if ($mydatos !== false) {
       if($id_evl != $id_evolucion){
         $id_evolucion = $id_evl;
         $evoluciones[$id_evolucion] = array(          
+          "medico"  => $dato["nombre"],          
           "evolucion"  => $dato["evolucion"],          
           "fecha"  => $dato["fecha"],
           "consultas" => $dato["id_consulta"] ? array($dato["id_consulta"] => $consulta) : null,

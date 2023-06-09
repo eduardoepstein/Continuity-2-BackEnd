@@ -254,14 +254,29 @@ if ($mydatos !== false && $mydatos2 !== false) {
       "0" => array("descripción" => "Sin Copago"),
       "1" => array("descripción" => "Copago Fijo"),
       "2" => array("descripción" => "Copago por %"),
-      "3" => array("descripción" => "Ver POSNET"),
+      "3" => array("descripción" => "Ver POSNET")
     );    
     $datos16 = array(
       "-1" => array("descripción" => "No completado"),
       "0" => array("descripción" => "Médico"),
       "1" => array("descripción" => "Cobertura Salud"),
-      "2" => array("descripción" => "Otro"),
+      "2" => array("descripción" => "Otro")
     );    
+    $datos17 = array(
+      "-1" => array("descripción" => "Otro"),
+      "0" => array("descripción" => "Ante evento"),
+      "1" => array("descripción" => "Única vez"),  
+      "4" => array("descripción" => "Cada 4 hs"),
+      "8" => array("descripción" => "Cada 8 hs"),
+      "12" => array("descripción" => "Cada 12 hs"),
+      "24" => array("descripción" => "Cada 24 hs"),          
+      "168" => array("descripción" => "Semana"),
+      "720" => array("descripción" => "Mes")
+    );   
+    $datos18 = array(
+      "1" => array("descripción" => "Agudo"),
+      "0" => array("descripción" => "Crónico")
+    );   
     $respuesta = array(
       "tipos_estudio" => $estudios,
       "especialidades" => $datos2,
@@ -278,7 +293,9 @@ if ($mydatos !== false && $mydatos2 !== false) {
       "unidades" => $datos13,
       "tipos_coberturas" => $datos14,
       "copago" => $datos15,
-      "quien_envia" => $datos16
+      "quien_envia" => $datos16,
+      "frecuencia_medicacion" => $datos17,
+      "tratamiento" => $datos18
     );
   } else {
     $respuesta = array();
