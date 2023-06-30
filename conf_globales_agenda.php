@@ -276,7 +276,25 @@ if ($mydatos !== false && $mydatos2 !== false) {
     $datos18 = array(
       "1" => array("descripción" => "Agudo"),
       "0" => array("descripción" => "Crónico")
-    );   
+    );
+    $datos19 = array(
+      "0" => array("descripción" => "Displemia"),
+      "1" => array("descripción" => "Obesidad"),
+      "2" => array("descripción" => "Tabaquismo"),
+      "3" => array("descripción" => "TabacoPasivo"),
+      "4" => array("descripción" => "ExTabaquista"),
+      "5" => array("descripción" => "Hipertension"),
+      "6" => array("descripción" => "Sedentarismo"),
+      "7" => array("descripción" => "Diabetes"),
+      "8" => array("descripción" => "AntFamiliares"),
+      "9" => array("descripción" => "Estres"),
+      "10" => array("descripción" => "DietaInadecuada"),
+      "11" => array("descripción" => "Climaterio"),
+      "12" => array("descripción" => "TratColesterol"),
+      "13" => array("descripción" => "TratDiabetes"),
+      "14" => array("descripción" => "TratHipertension"),
+      "15" => array("descripción" => "PrevencionSec")
+    );
     $respuesta = array(
       "tipos_estudio" => $estudios,
       "especialidades" => $datos2,
@@ -295,7 +313,8 @@ if ($mydatos !== false && $mydatos2 !== false) {
       "copago" => $datos15,
       "quien_envia" => $datos16,
       "frecuencia_medicacion" => $datos17,
-      "tratamiento" => $datos18
+      "tratamiento" => $datos18,
+      "factores_riesgo" => $datos19
     );
   } else {
     $respuesta = array();
